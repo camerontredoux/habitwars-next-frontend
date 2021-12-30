@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Spacer,
-  Text,
-  useBreakpointValue,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Spacer, Text } from "@chakra-ui/react";
 import router from "next/router";
 import NextLink from "next/link";
 import React from "react";
