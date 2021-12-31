@@ -1,11 +1,10 @@
 import { LockIcon, PhoneIcon } from "@chakra-ui/icons";
-import { Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import router from "next/router";
 import React from "react";
 import InputField from "../components/InputField";
-import Navigation from "../components/Navigation";
 import Wrapper from "../components/Wrapper";
 import { useLoginMutation } from "../generated/graphql";
 import createUrqlClient from "../utils/createUrqlClient";
@@ -22,7 +21,8 @@ export const Login: React.FC<loginProps> = ({}) => {
         onSubmit={async (values, { setErrors }) => {
           const response = await login(values);
           if (response.data?.login.errors) {
-            setErrors(toErrorMap(response.data.login.errors));
+            const errorMap = toErrorMap(response.data.login.errors);
+            setErrors(errorMap);
           } else if (response.data?.login.user) {
             router.push("/");
           }
@@ -43,6 +43,14 @@ export const Login: React.FC<loginProps> = ({}) => {
               type={"password"}
               icon={<LockIcon color="gray.300"></LockIcon>}
             />
+            <Button
+              variant="link"
+              mt={2}
+              float={"right"}
+              onClick={() => router.push("/forgot")}
+            >
+              Forgot Password?
+            </Button>
             <Button
               isLoading={isSubmitting}
               w={"100%"}
