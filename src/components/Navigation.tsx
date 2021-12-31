@@ -16,49 +16,49 @@ export const Navigation: React.FC<NavigationProps> = () => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   let body;
 
+  if (!data) {
+    return null;
+  }
+
   if (fetching) {
     body = null;
   } else if (!data?.me) {
     body = (
-      <>
-        <Box>
-          <Button
-            colorScheme="whatsapp"
-            mr="4"
-            size={"sm"}
-            onClick={() => router.push("/register")}
-          >
-            Register
-          </Button>
-          <Button
-            size={"sm"}
-            colorScheme="whatsapp"
-            onClick={() => router.push("/login")}
-          >
-            Login
-          </Button>
-        </Box>
-      </>
+      <Box>
+        <Button
+          colorScheme="whatsapp"
+          mr="4"
+          size={"sm"}
+          onClick={() => router.push("/register")}
+        >
+          Register
+        </Button>
+        <Button
+          size={"sm"}
+          colorScheme="whatsapp"
+          onClick={() => router.push("/login")}
+        >
+          Login
+        </Button>
+      </Box>
     );
   } else {
     body = (
-      <>
-        <Flex alignItems={"center"}>
-          <Text mr={4}>{data.me.username}</Text>
-          <Button
-            colorScheme="whatsapp"
-            mr="4"
-            size={"sm"}
-            onClick={() => {
-              logout();
-              router.push("/");
-            }}
-            isLoading={logoutFetching}
-          >
-            Logout
-          </Button>
-        </Flex>
-      </>
+      <Flex alignItems={"center"}>
+        <Text mr={4}>{data.me.username}</Text>
+        <Button
+          colorScheme="whatsapp"
+          mr="4"
+          size={"sm"}
+          onClick={() => {
+            logout();
+            router.push("/");
+          }}
+          isLoading={logoutFetching}
+        >
+          Logout
+        </Button>
+      </Flex>
     );
   }
   return (
