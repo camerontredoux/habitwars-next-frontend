@@ -1,13 +1,18 @@
 import { Box, Button, Flex, Spacer, Text } from "@chakra-ui/react";
-import router from "next/router";
+import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
+import router from "next/router";
 import React from "react";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import createUrqlClient from "../utils/createUrqlClient";
+import isServer from "../utils/isServer";
 
 interface NavigationProps {}
 
-export const Navigation: React.FC<NavigationProps> = ({}) => {
-  const [{ data, fetching }] = useMeQuery();
+export const Navigation: React.FC<NavigationProps> = () => {
+  const [{ data, fetching }] = useMeQuery({
+    pause: isServer(),
+  });
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   let body;
 
@@ -71,4 +76,4 @@ export const Navigation: React.FC<NavigationProps> = ({}) => {
   );
 };
 
-export default Navigation;
+export default withUrqlClient(createUrqlClient)(Navigation);
