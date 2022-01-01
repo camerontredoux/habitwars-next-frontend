@@ -1,20 +1,31 @@
-import { AtSignIcon, LockIcon } from "@chakra-ui/icons";
-import { Box, Button } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { LockIcon } from "@chakra-ui/icons";
+import { Button } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
 import { NextPage } from "next";
+import { withUrqlClient } from "next-urql";
 import router from "next/router";
 import InputField from "../../components/InputField";
 import Wrapper from "../../components/Wrapper";
-import { useForgotPasswordMutation } from "../../generated/graphql";
+import { useChangePasswordMutation } from "../../generated/graphql";
+import createUrqlClient from "../../utils/createUrqlClient";
+import { toErrorMap } from "../../utils/toErrorMap";
 
 export const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
-  const [, forgotPassword] = useForgotPasswordMutation();
+  const [, changePassword] = useChangePasswordMutation();
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ newPassword: "" }}
-        onSubmit={async (values) => {
-          const response = await forgotPassword(values);
+        onSubmit={async (values, { setErrors }) => {
+          const response = await changePassword({
+            newPassword: values.newPassword,
+            token,
+          });
+          if (response.data?.changePassword.errors) {
+            setErrors(toErrorMap(response.data.changePassword.errors));
+          } else if (response.data?.changePassword.user) {
+            router.push("/");
+          }
         }}
       >
         {({ isSubmitting }) => (
@@ -48,4 +59,4 @@ ChangePassword.getInitialProps = ({ query }) => {
   };
 };
 
-export default ChangePassword;
+export default withUrqlClient(createUrqlClient)(ChangePassword);
