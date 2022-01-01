@@ -1,5 +1,5 @@
 import { LockIcon } from "@chakra-ui/icons";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
@@ -43,7 +43,26 @@ export const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
               type={"password"}
               icon={<LockIcon color={"gray.300"}></LockIcon>}
             />
-            {badToken ? <Box textColor={"red.300"}>{badToken}</Box> : null}
+            {badToken ? (
+              <Box>
+                <Text
+                  fontSize={"sm"}
+                  mt={2}
+                  textColor={"red.300"}
+                  display={"inline-block"}
+                >
+                  {badToken}
+                </Text>
+                <Button
+                  variant="link"
+                  mt={2}
+                  float={"right"}
+                  onClick={() => router.push("/forgot")}
+                >
+                  Forgot Password?
+                </Button>
+              </Box>
+            ) : null}
             <Button
               mt={4}
               w={"100%"}
