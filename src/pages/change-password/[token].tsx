@@ -1,9 +1,10 @@
 import { LockIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { NextPage } from "next";
 import { withUrqlClient } from "next-urql";
 import router from "next/router";
+import { useState } from "react";
 import InputField from "../../components/InputField";
 import Wrapper from "../../components/Wrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
@@ -12,6 +13,7 @@ import { toErrorMap } from "../../utils/toErrorMap";
 
 export const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
   const [, changePassword] = useChangePasswordMutation();
+  const [badToken, setBadToken] = useState("");
   return (
     <Wrapper variant="small">
       <Formik
@@ -22,7 +24,11 @@ export const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
             token,
           });
           if (response.data?.changePassword.errors) {
-            setErrors(toErrorMap(response.data.changePassword.errors));
+            const errorMap = toErrorMap(response.data.changePassword.errors);
+            if ("token" in errorMap) {
+              setBadToken(errorMap.token);
+            }
+            setErrors(errorMap);
           } else if (response.data?.changePassword.user) {
             router.push("/");
           }
@@ -37,6 +43,7 @@ export const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
               type={"password"}
               icon={<LockIcon color={"gray.300"}></LockIcon>}
             />
+            {badToken ? <Box textColor={"red.300"}>{badToken}</Box> : null}
             <Button
               mt={4}
               w={"100%"}
