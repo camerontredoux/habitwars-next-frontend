@@ -76,4 +76,4 @@ export const Navigation: React.FC<NavigationProps> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Navigation);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Navigation);
