@@ -28,7 +28,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   return (
     <FormControl isInvalid={!!error} mt={4}>
       <InputGroup>
-        <InputLeftElement pointerEvents="none" children={icon} />
+        <InputLeftElement pointerEvents="none">{icon}</InputLeftElement>
         <Input aria-label={ariaLabel} {...field} {...props} id={field.name} />
       </InputGroup>
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
